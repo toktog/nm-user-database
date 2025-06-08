@@ -83,47 +83,54 @@
     const db = firebase.firestore();
 
     function savePlayer() {
-      const userId = document.getElementById("userId").value.trim();
-      const playername = document.getElementById("playername").value.trim();
-      const level = parseInt(document.getElementById("level").value.trim(), 10);
-      const message = document.getElementById("message");
+  const userId = document.getElementById("userId").value.trim();
+  const playername = document.getElementById("playername").value.trim();
+  const level = parseInt(document.getElementById("level").value.trim(), 10);
+  const message = document.getElementById("message");
 
-      if (!userId || !playername || isNaN(level)) {
-        message.textContent = "All fields are required!";
+  if (!userId || !playername || isNaN(level)) {
+    message.textContent = "All fields are required!";
+    message.style.color = "red";
+    return;
+  }
+
+  // Collect checked skills
+  const skills = [];
+  for (let i = 1; i <= 15; i++) {
+    const checkbox = document.getElementById("skill" + i);
+    if (checkbox && checkbox.checked) {
+      skills.push(checkbox.parentElement.textContent.trim());
+    }
+  }
+
+  // Capture Ginkotsu selection
+  const ginkotsuRadio = document.querySelector('input[name="ginkotsu"]:checked');
+  if (ginkotsuRadio) {
+    skills.push(ginkotsuRadio.value);  // Add selected Ginkotsu value
+  }
+
+  // Check for existing userId
+  db.collection("players").doc(userId).get().then((doc) => {
+    if (doc.exists) {
+      message.textContent = "❌ This User ID already exists!";
+      message.style.color = "red";
+    } else {
+      // Save player data
+      db.collection("players").doc(userId).set({
+        playername,
+        level,
+        skills
+      }).then(() => {
+        message.textContent = "✅ Player data saved!";
+        message.style.color = "green";
+      }).catch((error) => {
+        message.textContent = "❌ Error: " + error.message;
         message.style.color = "red";
-        return;
-      }
-
-      // Collect checked skills
-      const skills = [];
-      for (let i = 1; i <= 15; i++) {
-        const checkbox = document.getElementById("skill" + i);
-        if (checkbox && checkbox.checked) {
-          skills.push(checkbox.parentElement.textContent.trim());
-        }
-      }
-
-      // Check for existing userId
-      db.collection("players").doc(userId).get().then((doc) => {
-        if (doc.exists) {
-          message.textContent = "❌ This User ID already exists!";
-          message.style.color = "red";
-        } else {
-          // Save player data
-          db.collection("players").doc(userId).set({
-            playername,
-            level,
-            skills
-          }).then(() => {
-            message.textContent = "✅ Player data saved!";
-            message.style.color = "green";
-          }).catch((error) => {
-            message.textContent = "❌ Error: " + error.message;
-            message.style.color = "red";
-          });
-        }
       });
     }
+  });
+}
+
   </script>
 </body>
 </html>
