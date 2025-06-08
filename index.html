@@ -65,6 +65,11 @@
   <label><input type="checkbox" id="skill8"> BattoJutsu</label>
   <label><input type="checkbox" id="skill9"> ToK</label>
   <label><input type="checkbox" id="skill10"> ToG</label>
+  <label><input type="checkbox" id="skill11"> CoG</label>
+  <label><input type="checkbox" id="skill12"> Thorns</label>
+  <label><input type="checkbox" id="skill13"> VileBomb</label>
+  <label><input type="checkbox" id="skill14"> Water Toad</label>
+  <label><input type="checkbox" id="skill15"> Lightning Divine</label>
 </div>
 
 
@@ -98,9 +103,9 @@
   const skills = [];
 
   // Adding checkbox skills
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 15; i++) {
     const checkbox = document.getElementById("skill" + i);
-    if (checkbox && checkbox.checked) {
+    if (checkbox.checked) {
       skills.push(checkbox.parentElement.textContent.trim());
     }
   }
