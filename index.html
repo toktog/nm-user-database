@@ -3,39 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>User Info App</title>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-      max-width: 500px;
-      margin: auto;
-      background: #f5f5f5;
-    }
-    h2 {
-      text-align: center;
-    }
-    input, button {
-      display: block;
-      width: 100%;
-      margin: 1rem 0;
-      padding: 0.75rem;
-      font-size: 1rem;
-    }
-    #message {
-      text-align: center;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h2>User Info Form</h2>
-  <input id="userID" placeholder="User ID"><br>
-  <input id="username" placeholder="Username"><br>
-  <input id="bday" type="date" placeholder="Birthday"><br>
-  <button onclick="saveUser()">Save User</button>
-  <p id="message"></p>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
   // Your Firebase config
@@ -77,5 +46,38 @@
     });
   }
 </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+      background: #f5f5f5;
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 1rem 0;
+      padding: 0.75rem;
+      font-size: 1rem;
+    }
+    #message {
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>User Info Form</h2>
+  <input id="userID" placeholder="User ID"><br>
+  <input id="username" placeholder="Username"><br>
+  <input id="bday" type="date" placeholder="Birthday"><br>
+  <button onclick="saveUser()">Save User</button>
+  <p id="message"></p>
+
+  
 </body>
 </html>
