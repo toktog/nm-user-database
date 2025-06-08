@@ -6,46 +6,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-  <script>
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
-    authDomain: "nmdb-983db.firebaseapp.com",
-    projectId: "nmdb-983db"
-  };
-
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // ✅ Declare saveUser globally
-  function saveUser() {
-    const userID = document.getElementById("userID").value.trim();
-    const username = document.getElementById("username").value.trim();
-    const bday = document.getElementById("bday").value;
-
-    const msg = document.getElementById("message");
-
-    if (!userID || !username || !bday) {
-      msg.textContent = "All fields required!";
-      msg.style.color = "red";
-      return;
-    }
-
-    db.collection("users").doc(userID).set({
-      username,
-      birthday: bday
-    })
-    .then(() => {
-      msg.textContent = "✅ User saved!";
-      msg.style.color = "green";
-    })
-    .catch(err => {
-      msg.textContent = "❌ " + err.message;
-      msg.style.color = "red";
-    });
-  }
-</script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -78,6 +38,43 @@
   <button onclick="saveUser()">Save User</button>
   <p id="message"></p>
 
-  
+  <script>
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
+    authDomain: "nmdb-983db.firebaseapp.com",
+    projectId: "nmdb-983db"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  function saveUser() {
+    const userID = document.getElementById("userID").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const bday = document.getElementById("bday").value;
+
+    const msg = document.getElementById("message");
+
+    if (!userID || !username || !bday) {
+      msg.textContent = "All fields are required!";
+      msg.style.color = "red";
+      return;
+    }
+
+    db.collection("users").doc(userID).set({
+      username,
+      birthday: bday
+    })
+    .then(() => {
+      msg.textContent = "✅ User saved!";
+      msg.style.color = "green";
+    })
+    .catch((error) => {
+      msg.textContent = "❌ Error: " + error.message;
+      msg.style.color = "red";
+    });
+  }
+</script>
 </body>
 </html>
