@@ -37,46 +37,7 @@
   <button onclick="saveUser()">Save User</button>
   <p id="message"></p>
 
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
-    authDomain: "nmdb-983db.firebaseapp.com",
-    projectId: "nmdb-983db",
-    storageBucket: "nmdb-983db.firebasestorage.app",
-    messagingSenderId: "139404120868",
-    appId: "1:139404120868:web:93103b98d78d379ba7d9b1"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-
-      function saveUser() {
-        const userID = document.getElementById('userID').value.trim();
-        const username = document.getElementById('username').value.trim();
-        const bday = document.getElementById('bday').value;
-  
-        if (!userID || !username || !bday) {
-          document.getElementById('message').textContent = "All fields are required!";
-          return;
-      }
-
-      db.collection("users").doc(userID).set({
-        username: username,
-        birthday: bday
-      }).then(() => {
-        document.getElementById('message').textContent = "✅ User saved!";
-      }).catch((error) => {
-        document.getElementById('message').textContent = "❌ Error: " + error;
-      });
-    }
-  </script>
-
-  
-</body>
-</html>
+  <script>
+    // ✅ Your Firebase config (keep it secret in public apps)
+    const firebaseConfig = {
+      apiKey: "AIzaSyD
