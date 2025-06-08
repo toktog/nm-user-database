@@ -62,35 +62,69 @@
         return;
       }
 
+      // Search by User ID, Player Name or Level
       db.collection("players")
         .where("userId", "==", query)
         .get()
         .then((snapshot) => {
           if (snapshot.empty) {
-            message.textContent = "No results found.";
-            message.style.color = "red";
-            resultsDiv.innerHTML = "";
-            return;
+            // If no match found by userId, search by playername
+            db.collection("players")
+              .where("playername", "==", query)
+              .get()
+              .then((snapshotByName) => {
+                if (snapshotByName.empty) {
+                  // If no match found by playername, search by level
+                  db.collection("players")
+                    .where("level", "==", parseInt(query))
+                    .get()
+                    .then((snapshotByLevel) => {
+                      if (snapshotByLevel.empty) {
+                        message.textContent = "No results found.";
+                        message.style.color = "red";
+                        resultsDiv.innerHTML = "";
+                      } else {
+                        displayResults(snapshotByLevel);
+                      }
+                    })
+                    .catch((error) => handleError(error));
+                } else {
+                  displayResults(snapshotByName);
+                }
+              })
+              .catch((error) => handleError(error));
+          } else {
+            displayResults(snapshot);
           }
-          
-          message.textContent = "Search results:";
-          message.style.color = "green";
-
-          snapshot.forEach((doc) => {
-            const player = doc.data();
-            const playerDiv = document.createElement("div");
-            playerDiv.innerHTML = `
-              <strong>Player Name:</strong> ${player.playername} <br>
-              <strong>Level:</strong> ${player.level} <br>
-              <strong>Skills:</strong> ${player.skills.join(', ')} <br>
-            `;
-            resultsDiv.appendChild(playerDiv);
-          });
         })
-        .catch((error) => {
-          message.textContent = "❌ Error: " + error.message;
-          message.style.color = "red";
-        });
+        .catch((error) => handleError(error));
+    }
+
+    function displayResults(snapshot) {
+      const message = document.getElementById("message");
+      const resultsDiv = document.getElementById("results");
+
+      message.textContent = "Search results:";
+      message.style.color = "green";
+      resultsDiv.innerHTML = "";
+
+      snapshot.forEach((doc) => {
+        const player = doc.data();
+        const playerDiv = document.createElement("div");
+        playerDiv.innerHTML = `
+          <strong>User ID:</strong> ${player.userId} <br>
+          <strong>Player Name:</strong> ${player.playername} <br>
+          <strong>Level:</strong> ${player.level} <br>
+          <strong>Skills:</strong> ${player.skills.join(', ')} <br>
+        `;
+        resultsDiv.appendChild(playerDiv);
+      });
+    }
+
+    function handleError(error) {
+      const message = document.getElementById("message");
+      message.textContent = "❌ Error: " + error.message;
+      message.style.color = "red";
     }
   </script>
 </body>
