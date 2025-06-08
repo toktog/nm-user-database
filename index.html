@@ -96,6 +96,8 @@
 
   // Collect checked skills
   const skills = [];
+
+  // Add checked skills
   for (let i = 1; i <= 15; i++) {
     const checkbox = document.getElementById("skill" + i);
     if (checkbox && checkbox.checked) {
@@ -103,10 +105,10 @@
     }
   }
 
-  // Capture Ginkotsu selection
+  // Add the selected Ginkotsu radio (if any)
   const ginkotsuRadio = document.querySelector('input[name="ginkotsu"]:checked');
   if (ginkotsuRadio) {
-    skills.push(ginkotsuRadio.value);  // Add selected Ginkotsu value
+    skills.push(ginkotsuRadio.value);  // Add selected Ginkotsu value (if any)
   }
 
   // Check for existing userId
@@ -130,6 +132,7 @@
     }
   });
 }
+
 
   </script>
 </body>
