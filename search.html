@@ -13,7 +13,7 @@
       padding: 2rem;
       background: #f5f5f5;
     }
-    input, button {
+    input, button, label {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
@@ -40,6 +40,15 @@
   <h2>Search Players</h2>
   
   <input id="searchInput" placeholder="Enter UserID, Player Name, or Level" />
+  <div>
+    <strong>Filter by skills:</strong><br>
+    <label><input type="checkbox" id="filterCoG"> CoG</label>
+    <label><input type="checkbox" id="filterThorns"> Thorns</label>
+    <label><input type="checkbox" id="filterVileBomb"> VileBomb</label>
+    <label><input type="checkbox" id="filterWaterToad"> Water Toad</label>
+    <label><input type="checkbox" id="filterLightningDivine"> Lightning Divine</label>
+  </div>
+  
   <button onclick="searchPlayers()">Search</button>
   
   <div id="results"></div>
@@ -63,67 +72,42 @@
         return;
       }
 
-      let query;
+      let query = db.collection('players');
+      const skills = [];
 
-      // Check if queryValue is a number for Level search
-      const isLevelSearch = !isNaN(queryValue);
-
-      if (isLevelSearch) {
-        // Search by level
-        query = db.collection('players').where('level', '==', Number(queryValue));
-      } else {
-        // Search by userId or playername (simple Firestore doesn't do OR queries)
-        // We'll do two queries and combine results
-
-        // Query by userId (document ID)
-        const docRef = db.collection('players').doc(queryValue);
-        const docSnap = await docRef.get();
-
-        // Query by playername
-        const playernameQuery = db.collection('players').where('playername', '==', queryValue);
-        const playernameSnapshot = await playernameQuery.get();
-
-        let players = [];
-
-        if (docSnap.exists) {
-          players.push({ id: docSnap.id, data: docSnap.data() });
-        }
-
-        playernameSnapshot.forEach(doc => {
-          players.push({ id: doc.id, data: doc.data() });
-        });
-
-        if (players.length === 0) {
-          resultsDiv.textContent = 'No players found.';
-          return;
-        }
-
-        players.forEach(player => {
-          resultsDiv.innerHTML += createPlayerCard(player.id, player.data);
-        });
-        return;
+      // Check skills checkboxes
+      if (document.getElementById('filterCoG').checked) skills.push('CoG');
+      if (document.getElementById('filterThorns').checked) skills.push('Thorns');
+      if (document.getElementById('filterVileBomb').checked) skills.push('VileBomb');
+      if (document.getElementById('filterWaterToad').checked) skills.push('Water Toad');
+      if (document.getElementById('filterLightningDivine').checked) skills.push('Lightning Divine');
+      
+      if (skills.length > 0) {
+        query = query.where('skills', 'array-contains-any', skills);
       }
 
-      // If searching by level only
-      const snapshot = await query.get();
-      if (snapshot.empty) {
-        resultsDiv.textContent = 'No players found.';
-        return;
-      }
-      snapshot.forEach(doc => {
-        resultsDiv.innerHTML += createPlayerCard(doc.id, doc.data());
-      });
-    }
-
-    function createPlayerCard(id, data) {
-      return `
-        <div class="player-card">
-          <strong>User ID:</strong> ${id}<br>
-          <strong>Player Name:</strong> ${data.playername}<br>
-          <strong>Level:</strong> ${data.level}<br>
-          <strong>Skills:</strong> ${data.skills ? data.skills.join(', ') : 'None'}
-        </div>
-      `;
+      query = query.where('playername', '==', queryValue).get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            resultsDiv.textContent = 'No results found.';
+            return;
+          }
+          
+          snapshot.forEach(doc => {
+            const player = doc.data();
+            const playerCard = document.createElement('div');
+            playerCard.classList.add('player-card');
+            playerCard.innerHTML = `
+              <strong>UserID: ${doc.id}</strong>
+              <strong>Player Name: ${player.playername}</strong>
+              <strong>Level: ${player.level}</strong>
+              <strong>Skills: ${player.skills.join(', ')}</strong>
+            `;
+            resultsDiv.appendChild(playerCard);
+          });
+        }).catch(err => {
+          resultsDiv.textContent = 'Error retrieving data: ' + err.message;
+        });
     }
   </script>
 </body>
