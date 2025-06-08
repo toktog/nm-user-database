@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Search Players</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+    #results {
+      margin-top: 1rem;
+    }
+    .player-card {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .player-card strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Search Players</h2>
+  
+  <input id="searchInput" placeholder="Enter UserID, Player Name, or Level" />
+  <button onclick="searchPlayers()">Search</button>
+  
+  <div id="results"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
+      authDomain: "nmdb-983db.firebaseapp.com",
+      projectId: "nmdb-983db"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function searchPlayers() {
+      const queryValue = document.getElementById('searchInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = ''; // Clear previous results
+
+      if (!queryValue) {
+        resultsDiv.textContent = 'Please enter a search term.';
+        return;
+      }
+
+      let query;
+
+      // Check if queryValue is a number for Level search
+      const isLevelSearch = !isNaN(queryValue);
+
+      if (isLevelSearch) {
+        // Search by level
+        query = db.collection('players').where('level', '==', Number(queryValue));
+      } else {
+        // Search by userId or playername (simple Firestore doesn't do OR queries)
+        // We'll do two queries and combine results
+
+        // Query by userId (document ID)
+        const docRef = db.collection('players').doc(queryValue);
+        const docSnap = await docRef.get();
+
+        // Query by playername
+        const playernameQuery = db.collection('players').where('playername', '==', queryValue);
+        const playernameSnapshot = await playernameQuery.get();
+
+        let players = [];
+
+        if (docSnap.exists) {
+          players.push({ id: docSnap.id, data: docSnap.data() });
+        }
+
+        playernameSnapshot.forEach(doc => {
+          players.push({ id: doc.id, data: doc.data() });
+        });
+
+        if (players.length === 0) {
+          resultsDiv.textContent = 'No players found.';
+          return;
+        }
+
+        players.forEach(player => {
+          resultsDiv.innerHTML += createPlayerCard(player.id, player.data);
+        });
+        return;
+      }
+
+      // If searching by level only
+      const snapshot = await query.get();
+      if (snapshot.empty) {
+        resultsDiv.textContent = 'No players found.';
+        return;
+      }
+      snapshot.forEach(doc => {
+        resultsDiv.innerHTML += createPlayerCard(doc.id, doc.data());
+      });
+    }
+
+    function createPlayerCard(id, data) {
+      return `
+        <div class="player-card">
+          <strong>User ID:</strong> ${id}<br>
+          <strong>Player Name:</strong> ${data.playername}<br>
+          <strong>Level:</strong> ${data.level}<br>
+          <strong>Skills:</strong> ${data.skills ? data.skills.join(', ') : 'None'}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
