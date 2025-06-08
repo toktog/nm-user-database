@@ -1,82 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>User Info App</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <meta charset="UTF-8" />
+  <title>Player Data Form</title>
 
-
+  <!-- Firebase (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 2rem;
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       background: #f5f5f5;
     }
     h2 {
       text-align: center;
     }
-    input, button {
+    input, button, label {
       display: block;
       width: 100%;
-      margin: 1rem 0;
-      padding: 0.75rem;
+      margin: 0.5rem 0;
       font-size: 1rem;
     }
+    .checkboxes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    button {
+      padding: 0.75rem;
+    }
     #message {
+      margin-top: 1rem;
       text-align: center;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>User Info Form</h2>
-  <input id="userID" placeholder="User ID"><br>
-  <input id="username" placeholder="Username"><br>
-  <input id="bday" type="date" placeholder="Birthday"><br>
-  <button onclick="saveUser()">Save User</button>
+  <h2>Player Data</h2>
+
+  <input id="userId" placeholder="User ID" />
+  <input id="playername" placeholder="Player Name" />
+  <input id="level" type="number" placeholder="Level" />
+
+  <div class="checkboxes">
+    <label><input type="checkbox" id="skill1" /> Skill 1</label>
+    <label><input type="checkbox" id="skill2" /> Skill 2</label>
+    <label><input type="checkbox" id="skill3" /> Skill 3</label>
+    <label><input type="checkbox" id="skill4" /> Skill 4</label>
+    <label><input type="checkbox" id="skill5" /> Skill 5</label>
+    <label><input type="checkbox" id="skill6" /> Skill 6</label>
+    <label><input type="checkbox" id="skill7" /> Skill 7</label>
+    <label><input type="checkbox" id="skill8" /> Skill 8</label>
+  </div>
+
+  <button onclick="savePlayer()">Save Player</button>
   <p id="message"></p>
 
   <script>
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
-    authDomain: "nmdb-983db.firebaseapp.com",
-    projectId: "nmdb-983db"
-  };
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
+      authDomain: "nmdb-983db.firebaseapp.com",
+      projectId: "nmdb-983db"
+    };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-  function saveUser() {
-    const userID = document.getElementById("userID").value.trim();
-    const username = document.getElementById("username").value.trim();
-    const bday = document.getElementById("bday").value;
+    function savePlayer() {
+      const userId = document.getElementById("userId").value.trim();
+      const playername = document.getElementById("playername").value.trim();
+      const level = document.getElementById("level").value.trim();
+      const msg = document.getElementById("message");
 
-    const msg = document.getElementById("message");
+      if (!userId || !playername || !level) {
+        msg.textContent = "Please fill all fields.";
+        msg.style.color = "red";
+        return;
+      }
 
-    if (!userID || !username || !bday) {
-      msg.textContent = "All fields are required!";
-      msg.style.color = "red";
-      return;
+      const skills = {};
+      for (let i = 1; i <= 8; i++) {
+        skills[`skill${i}`] = document.getElementById(`skill${i}`).checked;
+      }
+
+      db.collection("players").doc(userId).set({
+        playername,
+        level,
+        skills
+      })
+      .then(() => {
+        msg.textContent = "✅ Player data saved!";
+        msg.style.color = "green";
+      })
+      .catch((error) => {
+        msg.textContent = "❌ Error: " + error.message;
+        msg.style.color = "red";
+      });
     }
-
-    db.collection("users").doc(userID).set({
-      username,
-      birthday: bday
-    })
-    .then(() => {
-      msg.textContent = "✅ User saved!";
-      msg.style.color = "green";
-    })
-    .catch((error) => {
-      msg.textContent = "❌ Error: " + error.message;
-      msg.style.color = "red";
-    });
-  }
-</script>
+  </script>
 </body>
 </html>
