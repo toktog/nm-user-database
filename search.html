@@ -56,29 +56,35 @@
       const message = document.getElementById("message");
       const resultsDiv = document.getElementById("results");
 
+      // Check if the input field is empty
       if (!query) {
         message.textContent = "Please enter a search term.";
         message.style.color = "red";
         return;
       }
 
-      // Search by User ID, Player Name or Level
+      message.textContent = ""; // Clear any previous messages
+
+      // Attempt to search by User ID first
       db.collection("players")
         .where("userId", "==", query)
         .get()
         .then((snapshot) => {
+          console.log("Searching for User ID:", query); // Debugging log
           if (snapshot.empty) {
-            // If no match found by userId, search by playername
+            // If no match by User ID, try searching by playername
             db.collection("players")
               .where("playername", "==", query)
               .get()
               .then((snapshotByName) => {
+                console.log("Searching for Player Name:", query); // Debugging log
                 if (snapshotByName.empty) {
-                  // If no match found by playername, search by level
+                  // If no match by playername, try searching by level
                   db.collection("players")
                     .where("level", "==", parseInt(query))
                     .get()
                     .then((snapshotByLevel) => {
+                      console.log("Searching for Level:", query); // Debugging log
                       if (snapshotByLevel.empty) {
                         message.textContent = "No results found.";
                         message.style.color = "red";
