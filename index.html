@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Player Info App</title>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -48,96 +48,82 @@
   <input id="level" type="number" placeholder="Level" min="1">
   
   <div class="checkbox-group">
-  <label><input type="checkbox" id="skill1"> Meteor</label>
-
-  <!-- Ginkotsu section changed to radio buttons -->
-  <div>
-    <strong>Ginkotsu:</strong><br>
-    <label><input type="radio" name="ginkotsu" value="Ginkotsu 1"> Ginkotsu 1</label>
-    <label><input type="radio" name="ginkotsu" value="Ginkotsu 2"> Ginkotsu 2</label>
+    <label><input type="checkbox" id="skill1"> Meteor</label>
+    <div>
+      <strong>Ginkotsu:</strong><br>
+      <label><input type="radio" name="ginkotsu" value="Ginkotsu 1"> Ginkotsu 1</label>
+      <label><input type="radio" name="ginkotsu" value="Ginkotsu 2"> Ginkotsu 2</label>
+    </div>
+    <label><input type="checkbox" id="skill3"> Mikoto</label>
+    <label><input type="checkbox" id="skill4"> Yahata</label>
+    <label><input type="checkbox" id="skill5"> Mutoh</label>
+    <label><input type="checkbox" id="skill6"> Kurokami</label>
+    <label><input type="checkbox" id="skill7"> Fulgur</label>
+    <label><input type="checkbox" id="skill8"> BattoJutsu</label>
+    <label><input type="checkbox" id="skill9"> ToK</label>
+    <label><input type="checkbox" id="skill10"> ToG</label>
+    <!-- New Skills -->
+    <label><input type="checkbox" id="skill11"> CoG</label>
+    <label><input type="checkbox" id="skill12"> Thorns</label>
+    <label><input type="checkbox" id="skill13"> VileBomb</label>
+    <label><input type="checkbox" id="skill14"> Water Toad</label>
+    <label><input type="checkbox" id="skill15"> Lightning Divine</label>
   </div>
-
-  <label><input type="checkbox" id="skill3"> Mikoto</label>
-  <label><input type="checkbox" id="skill4"> Yahata</label>
-  <label><input type="checkbox" id="skill5"> Mutoh</label>
-  <label><input type="checkbox" id="skill6"> Kurokami</label>
-  <label><input type="checkbox" id="skill7"> Fulgur</label>
-  <label><input type="checkbox" id="skill8"> BattoJutsu</label>
-  <label><input type="checkbox" id="skill9"> ToK</label>
-  <label><input type="checkbox" id="skill10"> ToG</label>
-  <label><input type="checkbox" id="skill11"> CoG</label>
-  <label><input type="checkbox" id="skill12"> Thorns</label>
-  <label><input type="checkbox" id="skill13"> VileBomb</label>
-  <label><input type="checkbox" id="skill14"> Water Toad</label>
-  <label><input type="checkbox" id="skill15"> Lightning Divine</label>
-</div>
-
 
   <button onclick="savePlayer()">Save Player</button>
   <p id="message"></p>
 
   <script>
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDnG1aqgL2hr-kZ_Sst7oHOGzgfDW4Ulnk",
       authDomain: "nmdb-983db.firebaseapp.com",
       projectId: "nmdb-983db"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     function savePlayer() {
-  const userId = document.getElementById("userId").value.trim();
-  const playername = document.getElementById("playername").value.trim();
-  const level = parseInt(document.getElementById("level").value.trim(), 10);
-  const message = document.getElementById("message");
+      const userId = document.getElementById("userId").value.trim();
+      const playername = document.getElementById("playername").value.trim();
+      const level = parseInt(document.getElementById("level").value.trim(), 10);
+      const message = document.getElementById("message");
 
-  if (!userId || !playername || isNaN(level)) {
-    message.textContent = "All fields are required!";
-    message.style.color = "red";
-    return;
-  }
-
-  // Collect checked skills
-  const skills = [];
-
-  // Adding checkbox skills
-  for (let i = 1; i <= 15; i++) {
-    const checkbox = document.getElementById("skill" + i);
-    if (checkbox.checked) {
-      skills.push(checkbox.parentElement.textContent.trim());
-    }
-  }
-
-  // Check for the selected Ginkotsu skill (radio button)
-  const ginkotsu = document.querySelector('input[name="ginkotsu"]:checked');
-  if (ginkotsu) {
-    skills.push(ginkotsu.value); // Add the selected Ginkotsu skill (Ginkotsu 1 or Ginkotsu 2)
-  }
-
-  // Check for existing userId
-  db.collection("players").doc(userId).get().then((doc) => {
-    if (doc.exists) {
-      message.textContent = "❌ This User ID already exists!";
-      message.style.color = "red";
-    } else {
-      // Save player data
-      db.collection("players").doc(userId).set({
-        playername,
-        level,
-        skills
-      }).then(() => {
-        message.textContent = "✅ Player data saved!";
-        message.style.color = "green";
-      }).catch((error) => {
-        message.textContent = "❌ Error: " + error.message;
+      if (!userId || !playername || isNaN(level)) {
+        message.textContent = "All fields are required!";
         message.style.color = "red";
+        return;
+      }
+
+      // Collect checked skills
+      const skills = [];
+      for (let i = 1; i <= 15; i++) {
+        const checkbox = document.getElementById("skill" + i);
+        if (checkbox && checkbox.checked) {
+          skills.push(checkbox.parentElement.textContent.trim());
+        }
+      }
+
+      // Check for existing userId
+      db.collection("players").doc(userId).get().then((doc) => {
+        if (doc.exists) {
+          message.textContent = "❌ This User ID already exists!";
+          message.style.color = "red";
+        } else {
+          // Save player data
+          db.collection("players").doc(userId).set({
+            playername,
+            level,
+            skills
+          }).then(() => {
+            message.textContent = "✅ Player data saved!";
+            message.style.color = "green";
+          }).catch((error) => {
+            message.textContent = "❌ Error: " + error.message;
+            message.style.color = "red";
+          });
+        }
       });
     }
-  });
-}
-
   </script>
 </body>
 </html>
