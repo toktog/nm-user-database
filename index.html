@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Player Data Form</title>
-
-  <!-- Firebase (Compat) -->
+  <meta charset="UTF-8">
+  <title>Player Info App</title>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -25,39 +22,51 @@
       margin: 0.5rem 0;
       font-size: 1rem;
     }
-    .checkboxes {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
     button {
       padding: 0.75rem;
+      margin-top: 1rem;
     }
     #message {
-      margin-top: 1rem;
       text-align: center;
       font-weight: bold;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .checkbox-group label {
+      width: 45%;
+      margin: 5px;
     }
   </style>
 </head>
 <body>
-  <h2>Player Data</h2>
 
-  <input id="userId" placeholder="User ID" />
-  <input id="playername" placeholder="Player Name" />
-  <input id="level" type="number" placeholder="Level" />
+  <h2>Player Info Form</h2>
+  <input id="userId" placeholder="User ID">
+  <input id="playername" placeholder="Player Name">
+  <input id="level" type="number" placeholder="Level" min="1">
+  
+  <div class="checkbox-group">
+  <label><input type="checkbox" id="skill1"> Meteor</label>
 
-  <div class="checkboxes">
-    <label><input type="checkbox" id="skill1" /> Skill 1</label>
-    <label><input type="checkbox" id="skill2" /> Skill 2</label>
-    <label><input type="checkbox" id="skill3" /> Skill 3</label>
-    <label><input type="checkbox" id="skill4" /> Skill 4</label>
-    <label><input type="checkbox" id="skill5" /> Skill 5</label>
-    <label><input type="checkbox" id="skill6" /> Skill 6</label>
-    <label><input type="checkbox" id="skill7" /> Skill 7</label>
-    <label><input type="checkbox" id="skill8" /> Skill 8</label>
+  <!-- Ginkotsu section changed to radio buttons -->
+  <div>
+    <strong>Ginkotsu:</strong><br>
+    <label><input type="radio" name="ginkotsu" value="Ginkotsu 1"> Ginkotsu 1</label>
+    <label><input type="radio" name="ginkotsu" value="Ginkotsu 2"> Ginkotsu 2</label>
   </div>
+
+  <label><input type="checkbox" id="skill3"> Mikoto</label>
+  <label><input type="checkbox" id="skill4"> Yahata</label>
+  <label><input type="checkbox" id="skill5"> Mutoh</label>
+  <label><input type="checkbox" id="skill6"> Kurokami</label>
+  <label><input type="checkbox" id="skill7"> Fulgur</label>
+  <label><input type="checkbox" id="skill8"> BattoJutsu</label>
+  <label><input type="checkbox" id="skill9"> ToK</label>
+  <label><input type="checkbox" id="skill10"> ToG</label>
+</div>
+
 
   <button onclick="savePlayer()">Save Player</button>
   <p id="message"></p>
@@ -70,39 +79,49 @@
       projectId: "nmdb-983db"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     function savePlayer() {
       const userId = document.getElementById("userId").value.trim();
       const playername = document.getElementById("playername").value.trim();
-      const level = document.getElementById("level").value.trim();
-      const msg = document.getElementById("message");
+      const level = parseInt(document.getElementById("level").value.trim(), 10);
+      const message = document.getElementById("message");
 
-      if (!userId || !playername || !level) {
-        msg.textContent = "Please fill all fields.";
-        msg.style.color = "red";
+      if (!userId || !playername || isNaN(level)) {
+        message.textContent = "All fields are required!";
+        message.style.color = "red";
         return;
       }
 
-      const skills = {};
-      for (let i = 1; i <= 8; i++) {
-        skills[`skill${i}`] = document.getElementById(`skill${i}`).checked;
+      // Collect checked skills
+      const skills = [];
+      for (let i = 1; i <= 10; i++) {
+        const checkbox = document.getElementById("skill" + i);
+        if (checkbox.checked) {
+          skills.push(checkbox.parentElement.textContent.trim());
+        }
       }
 
-      db.collection("players").doc(userId).set({
-        playername,
-        level,
-        skills
-      })
-      .then(() => {
-        msg.textContent = "✅ Player data saved!";
-        msg.style.color = "green";
-      })
-      .catch((error) => {
-        msg.textContent = "❌ Error: " + error.message;
-        msg.style.color = "red";
+      // Check for existing userId
+      db.collection("players").doc(userId).get().then((doc) => {
+        if (doc.exists) {
+          message.textContent = "❌ This User ID already exists!";
+          message.style.color = "red";
+        } else {
+          // Save player data
+          db.collection("players").doc(userId).set({
+            playername,
+            level,
+            skills
+          }).then(() => {
+            message.textContent = "✅ Player data saved!";
+            message.style.color = "green";
+          }).catch((error) => {
+            message.textContent = "❌ Error: " + error.message;
+            message.style.color = "red";
+          });
+        }
       });
     }
   </script>
