@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Player Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Player</title>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <style>
@@ -30,26 +31,16 @@
       text-align: center;
       font-weight: bold;
     }
-    .results {
-      margin-top: 20px;
-    }
-    .results p {
-      padding: 5px;
-      background: #e0e0e0;
-    }
   </style>
 </head>
 <body>
 
   <h2>Search Player</h2>
-  <input id="searchUserId" placeholder="Search by User ID">
-  <input id="searchPlayername" placeholder="Search by Player Name">
-  <input id="searchLevel" type="number" placeholder="Search by Level" min="1">
-
+  <input id="searchQuery" placeholder="Search by User ID, Player Name, or Level" />
   <button onclick="searchPlayer()">Search</button>
-  <p id="message"></p>
 
-  <div class="results" id="searchResults"></div>
+  <p id="message"></p>
+  <div id="results"></div>
 
   <script>
     const firebaseConfig = {
@@ -61,50 +52,42 @@
     const db = firebase.firestore();
 
     function searchPlayer() {
-      const userId = document.getElementById("searchUserId").value.trim();
-      const playername = document.getElementById("searchPlayername").value.trim();
-      const level = parseInt(document.getElementById("searchLevel").value.trim(), 10);
+      const query = document.getElementById('searchQuery').value.trim();
       const message = document.getElementById("message");
-      const resultsDiv = document.getElementById("searchResults");
+      const resultsDiv = document.getElementById("results");
 
-      // Clear previous results
-      resultsDiv.innerHTML = "";
-      message.textContent = "";
-
-      // Query the database based on search parameters
-      let query = db.collection("players");
-
-      if (userId) {
-        query = query.where("userId", "==", userId);
+      if (!query) {
+        message.textContent = "Please enter a search term.";
+        message.style.color = "red";
+        return;
       }
 
-      if (playername) {
-        query = query.where("playername", "==", playername);
-      }
-
-      if (level) {
-        query = query.where("level", "==", level);
-      }
-
-      query.get()
-        .then(snapshot => {
+      db.collection("players")
+        .where("userId", "==", query)
+        .get()
+        .then((snapshot) => {
           if (snapshot.empty) {
-            message.textContent = "No results found!";
+            message.textContent = "No results found.";
             message.style.color = "red";
-          } else {
-            snapshot.forEach(doc => {
-              const playerData = doc.data();
-              resultsDiv.innerHTML += `
-                <p><strong>User ID:</strong> ${doc.id}</p>
-                <p><strong>Player Name:</strong> ${playerData.playername}</p>
-                <p><strong>Level:</strong> ${playerData.level}</p>
-                <p><strong>Skills:</strong> ${playerData.skills.join(", ")}</p>
-                <hr>
-              `;
-            });
+            resultsDiv.innerHTML = "";
+            return;
           }
+          
+          message.textContent = "Search results:";
+          message.style.color = "green";
+
+          snapshot.forEach((doc) => {
+            const player = doc.data();
+            const playerDiv = document.createElement("div");
+            playerDiv.innerHTML = `
+              <strong>Player Name:</strong> ${player.playername} <br>
+              <strong>Level:</strong> ${player.level} <br>
+              <strong>Skills:</strong> ${player.skills.join(', ')} <br>
+            `;
+            resultsDiv.appendChild(playerDiv);
+          });
         })
-        .catch(error => {
+        .catch((error) => {
           message.textContent = "❌ Error: " + error.message;
           message.style.color = "red";
         });
