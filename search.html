@@ -65,9 +65,9 @@
 
       message.textContent = ""; // Clear any previous messages
 
-      // Attempt to search by User ID first
+      // Attempt to search by userId (which is stored as "players" field in the database)
       db.collection("players")
-        .where("userId", "==", query)
+        .where("players", "==", query)  // Changed "userId" to "players"
         .get()
         .then((snapshot) => {
           console.log("Searching for User ID:", query); // Debugging log
@@ -118,7 +118,7 @@
         const player = doc.data();
         const playerDiv = document.createElement("div");
         playerDiv.innerHTML = `
-          <strong>User ID:</strong> ${player.userId} <br>
+          <strong>User ID:</strong> ${player.players} <br> <!-- Changed userId to players -->
           <strong>Player Name:</strong> ${player.playername} <br>
           <strong>Level:</strong> ${player.level} <br>
           <strong>Skills:</strong> ${player.skills.join(', ')} <br>
