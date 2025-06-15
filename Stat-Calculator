@@ -108,11 +108,11 @@
         <label>
           Element:
           <select id="playerElement", onchange="calculateStatPoints()">
-            <option value="Earth">Earth</option>
-            <option value="Fire">Fire</option>
-            <option value="Wind">Wind</option>
-            <option value="Lightning">Lightning</option>
-            <option value="Water">Water</option>
+            <option value="Earth">Earth 🪨</option>
+            <option value="Fire">Fire 🔥</option>
+            <option value="Wind">Wind 🍃</option>
+            <option value="Lightning">Lightning ⚡</option>
+            <option value="Water">Water 💧</option>
           </select>
         </label>
 
@@ -235,6 +235,28 @@
     </div>
     </div>
 
+    <div class="box">
+      <div class="section input">
+        <div class="smallbox"><h2>Additional stats</h2></div>
+
+        <div class="smallbox">
+        <!-- Inputs -->
+        <!--
+        <label>HP: <input type="number" value="0" min="0" id="add_hpInput" onchange="add_hpChange()"></label>
+        <label>CP: <input type="number" value="0" min="0" id="add_cpInput" onchange="add_cpChange()"></label>
+        -->
+        <label>Strength(%): <input type="number" value="0" min="0" id="add_strInput" onchange="add_strChange()"></label>
+        <label>Flexibility(%): <input type="number" value="0" min="0" id="add_flexInput" onchange="add_flexChange()"></label>
+        <label>Concentration(%): <input type="number" value="0" min="0"id="add_critInput" onchange="add_critChange()"></label>
+        <label>Purify(%): <input type="number" value="0" min="0" max="250" id="add_puriInput" onchange="add_puriChange()"></label>
+        <label>Resistance(%): <input type="number" value="0" min="0" id="add_resInput" onchange="add_resChange()"></label>
+        <label>Protection(%): <input type="number" value="0" min="0" id="add_protInput" onchange="add_protChange()"></label>
+        <label>Agility(%): <input type="number" value="0" min="0" id="add_agiInput" onchange="add_agiChange()"></label>
+        <label>Accuracy(%): <input type="number" value="0" min="0" id="add_accuInput" onchange="add_accuChange()"></label>
+        </div>
+        <input type="button", value="RESET", onclick="resetAdditionalStats()">
+      </div>
+
   </div>
 
 
@@ -249,6 +271,7 @@
     var secret1, secret2, secret3;
     var hp, cp, str, flex, crit, res, puri, agi, prot;
     var accuracy;
+    var add_str, add_flex, add_crit, addpuri, add_res, add_prot, add_agi, add_accuChange;
 
     function calculateStatPoints(){
         playerLevel = Number(document.getElementById("levelInput").value);
@@ -265,7 +288,17 @@
         puri = Number(document.getElementById("puriInput").value);
         res = Number(document.getElementById("resInput").value);
         agi = Number(document.getElementById("agiInput").value);
+
         accuracy = 0;
+
+        add_str = Number(document.getElementById("add_strInput").value);
+        add_flex = Number(document.getElementById("add_flexInput").value);
+        add_crit = Number(document.getElementById("add_critInput").value);
+        add_puri = Number(document.getElementById("add_puriInput").value);
+        add_res = Number(document.getElementById("add_resInput").value);
+        add_prot = Number(document.getElementById("add_protInput").value);
+        add_agi = Number(document.getElementById("add_agiInput").value);
+        add_accu = Number(document.getElementById("add_accuInput").value);
 
         drawStatChart(hp, cp, str, flex, agi, crit, puri, res);
 
@@ -353,6 +386,15 @@
             str += 10;
         }
 
+        str += add_str;
+        flex += add_flex;
+        crit += add_crit;
+        puri += add_puri;
+        res += add_res;
+        prot += add_prot;
+        agi = agi + (agi * (add_agi / 100));
+        accuracy += add_accu;
+
         document.getElementById("hpOutput").innerText = "HP: " + hp;
         document.getElementById("cpOutput").innerText = "CP: " + cp;
         document.getElementById("strOutput").innerText = "Damage: " + str + "%";
@@ -404,6 +446,42 @@
     function agiChange(){
         calculateStatPoints();
     }
+
+    function add_strChange(){
+        calculateStatPoints();
+    }
+
+    function add_agiChange(){
+        calculateStatPoints();
+    }
+
+    function add_cpChange(){
+        calculateStatPoints();
+    }
+
+    function add_critChange(){
+        calculateStatPoints();
+    }
+
+    function add_flexChange(){
+        calculateStatPoints();
+    }
+    
+    function add_protChange(){
+        calculateStatPoints();
+    }
+
+    function add_resChange(){
+        calculateStatPoints();
+    }
+
+    function add_puriChange(){
+        calculateStatPoints();
+    }
+
+    function add_accuChange(){
+        calculateStatPoints();
+    }
 }
     
     function resetStats(){
@@ -421,6 +499,19 @@
         document.getElementById("puriInput").value = "0";
         document.getElementById("resInput").value = "0";
         document.getElementById("agiInput").value = "0";
+
+        calculateStatPoints();
+    }
+
+    function resetAdditionalStats(){
+        document.getElementById("add_strInput").value = "0";
+        document.getElementById("add_flexInput").value = "0";
+        document.getElementById("add_critInput").value = "0";
+        document.getElementById("add_puriInput").value = "0";
+        document.getElementById("add_resInput").value = "0";
+        document.getElementById("add_protInput").value = "0";
+        document.getElementById("add_agiInput").value = "0";
+        document.getElementById("add_accuInput").value = "0";
 
         calculateStatPoints();
     }
