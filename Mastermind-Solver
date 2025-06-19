@@ -48,7 +48,7 @@
     </div>
     <button onclick="nextGuess()">
     <div class="image-wrapper">
-        <img src="images\token.png" title="Start" alt="Start">
+        <img src="images/token.png" title="Next" alt="next">
         <div class="centered-text">Next</div>
     </div>
     </button>
