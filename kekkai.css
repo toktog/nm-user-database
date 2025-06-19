@@ -1,0 +1,265 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #222;
+    color: #eee;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
+hr {
+    margin: 15px;
+    border: 1px solid #672929;
+}
+
+#menu, #gameMessage {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background: #333;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
+
+    position: fixed; /* or absolute if inside a relative container */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10; /* Ensure it stays on top if needed */
+}
+
+#gameMessage{
+    font-size: 1.2em;
+    text-align: center;
+}
+
+#gameMessage img{
+    padding-top: 5px;
+}
+
+#menu label {
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #ddd;
+}
+
+#difficulty {
+    font-size: 18px;
+    padding: 10px 15px;
+    background: #444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    appearance: none;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: inset 0 0 5px #000;
+}
+
+#difficulty:hover {
+    background-color: #555;
+}
+
+.image-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    animation: beat 1.2s infinite ease-in-out;
+}
+
+.image-button img {
+    width: 50px;
+    height: auto;
+    transition: transform 0.2s;
+}
+
+.image-button img:hover {
+    transform: scale(1.05);
+}
+
+.button-row {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#main-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#guesses {
+    text-align: center;
+    margin-bottom: 20px;
+    display: none;
+}
+
+table {
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #333;
+}
+
+th, td {
+    border: 1px solid #888;
+    padding: 5px 15px;
+}
+
+td img {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+th {
+    background-color: #444;
+}
+
+tfoot td {
+    background-color: #111;
+    color: #f66;
+    font-style: italic;
+}
+
+tfoot img {
+    vertical-align: middle;
+    height: 30px;
+    width: 30px;
+    padding: 10px 5px;
+}
+
+#buttons {
+    margin-top: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    margin: 5px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.centered-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(235, 225, 225);
+  font-weight: bold;
+  font-size: 18px;
+  text-shadow: 1px 1px 2px black;
+  pointer-events: none; /* Optional: let clicks pass through */
+}
+
+.image-wrapper {
+  position: relative;
+  display: inline-block; /* or block */
+  align-items: center;
+}
+
+.image-wrapper img {
+  display: block;
+  width: 100%; /* or fixed width if needed */
+  height: auto;
+}
+
+select {
+    font-size: 18px;
+    padding: 10px;
+    text-align: center;
+    width: 100px;
+}
+
+.guess {
+    margin-top: 15px;
+    font-size: 22px;
+}
+
+.guess img {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    margin: 0 2px;
+}
+
+.symbol-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 5px;
+    cursor: pointer;
+    animation: beat 1s infinite ease-in-out;
+}
+
+.symbol-btn img {
+    width: 50px;
+    height:50px;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    }
+
+.symbol-btn img:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+@keyframes beat {
+    0%, 100% {
+    transform: scale(1);
+    }
+    50% {
+    transform: scale(1.15);
+    }
+}
+
+input[type="number"] {
+  width: 60px;
+  padding: 6px;
+  font-size: 16px;
+  border: 2px solid #555;
+  border-radius: 6px;
+  background-color: #222;
+  color: white;
+}
+
+input, select, button {
+    font-size: 16px;
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+#guessBox {
+    font-size: 20px;
+    margin: 20px 0;
+    background: #222;
+    padding: 10px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+#historyTable th, #historyTable td {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+}
+
+#historyTable img {
+    vertical-align: middle;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+
+        <title>Mastermind Solver</title>
+        <link rel="stylesheet" href="kekkai.css">
+    </head>
+
+    <body>
+
+    <h1>Mastermind Solver</h1>
+
+    <label>Difficulty:</label>
+    <select id="difficulty">
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    </select>
+    <button onclick="startSolver()">
+    <div class="image-wrapper">
+    <img src="images\ok.png" title="Start" alt="Start">
+    <div class="centered-text">Start</div>
+    </div>
+    </button>
+
+    <div id="solver" style="display:none;">
+
+    <table id="historyTable" style="margin: 20px auto; display: none; border-collapse: collapse;">
+    <thead>
+    <tr>
+    <th style="padding: 10px; border-bottom: 2px solid #888;">Guessed</th>
+    <th style="padding: 10px; border-bottom: 2px solid #888;">Clue</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+    </table>
+
+    <div id="guessBox">First guess will appear here</div>
+
+    <div>
+    <label>✅ Correct Place:</label>
+    <input type="number" id="correctPlace" min="0" max="5" value="0">
+    <label>🔄 Wrong Place:</label>
+    <input type="number" id="wrongPlace" min="0" max="5"  value="0">
+
+    </div>
+    <button onclick="nextGuess()">
+    <div class="image-wrapper">
+        <img src="images\token.png" title="Start" alt="Start">
+        <div class="centered-text">Next</div>
+    </div>
+    </button>
+    </div>
+
+    <script src="MasterMind-solver.js">
+    </script>
+
+    </body>
+</html>

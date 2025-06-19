@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mastermind Puzzle</title>
+  <link rel="stylesheet" href="kekkai.css">
+  <script src="kekkai-script.js"></script>
+</head>
+<body>
+
+<h1> Mastermind Puzzle </h1>
+<div id="menu">
+  <label for="difficulty">🎯 Select Difficulty</label>
+  <select id="difficulty">
+    <option value="2">2 - Easy</option>
+    <option value="3">3 - Normal</option>
+    <option value="4">4 - Hard</option>
+    <option value="5">5 - Expert</option>
+  </select>
+  <button class="image-button" onclick="startGame()">
+    <img src="images\start.png" width="30" height="30" title="Start" alt="Start">
+  </button>
+</div>
+
+<div id="main-container">
+  <div id="guesses">
+    <table id="guessTable">
+      <thead>
+        <tr>
+          <th id="guessHeader">Level</th>
+          <th>Clue</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+
+  <div id="game">
+    <div id="currentGuess" class="guess"></div>
+  </div>
+</div>
+
+<div id="buttons"></div>
+
+<div id="gameMessage" style="display: none;" class="message-box">You lose</div>
+
+
+</body>
+</html>
